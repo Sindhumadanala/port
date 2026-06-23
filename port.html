@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madanala Sindhuja — ECE Engineer & RTL Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #00e5c3;
+    --accent2: #7c6dff;
+    --accent3: #ff6b6b;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --chip: #1e1e2e;
+  }
+
+  [data-theme="light"] {
+    --bg: #f4f4f8;
+    --surface: #ededf2;
+    --card: #ffffff;
+    --border: #d1d1db;
+    --accent: #00b398;
+    --accent2: #5b4be6;
+    --accent3: #e64a4a;
+    --text: #121217;
+    --muted: #626273;
+    --chip: #eaeaea;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,195,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,195,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.12;
+  }
+  .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -200px; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 20%; left: -150px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  [data-theme="light"] nav { background: rgba(244,244,248,0.8); }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Theme Control Button */
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    color: var(--text);
+    padding: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  /* HERO SPLIT */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: center;
+    gap: 4rem;
+    padding-top: 8rem;
+  }
+
+  .hero-content { display: flex; flex-direction: column; justify-content: center; }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2rem;
+  }
+  .hero-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 550px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-image-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .profile-frame {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    border-radius: 8px;
+    padding: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+  .badge {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--chip);
+  }
+
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary, .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.75rem;
+    text-decoration: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #00c9ac; transform: translateY(-2px); }
+  .btn-outline { border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* STAT BAR */
+  .stat-bar { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stat-bar-inner { max-width: 1200px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
+  .stat-item { background: var(--surface); padding: 1.5rem; text-align: center; }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--accent); margin-bottom: 0.3rem; }
+  .stat-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+  /* HEADINGS */
+  .section-tag { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+  .section-tag::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h2 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; margin-bottom: 3rem; color: var(--text); }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
+  .skill-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 1.75rem; transition: all 0.3s; }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .skill-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; color: var(--text); }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .skill-tag { padding: 0.25rem 0.6rem; background: var(--chip); border: 1px solid var(--border); border-radius: 2px; font-size: 0.68rem; color: var(--muted); }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+  .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s; }
+  .project-card:hover { border-color: var(--accent2); transform: translateY(-4px); }
+  .project-top { margin-bottom: 1.5rem; }
+  .project-num { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: var(--border); line-height: 1; margin-bottom: 0.75rem; }
+  .project-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--text); margin-bottom: 0.75rem; }
+  .project-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
+  .project-footer { display: flex; flex-direction: column; gap: 0.75rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .project-links-row { display: flex; gap: 1rem; }
+  .p-link { font-size: 0.7rem; color: var(--accent); text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.25rem; }
+  .p-link:hover { text-decoration: underline; }
+  .project-status { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--accent), transparent); }
+  .timeline-item { position: relative; margin-bottom: 3rem; padding-left: 1.5rem; }
+  .timeline-item::before { content: ''; position: absolute; left: -2.35rem; top: 0.4rem; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .timeline-date { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); background: rgba(0,229,195,0.06); padding: 0.2rem 0.6rem; border-radius: 2px; }
+  .timeline-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--text); }
+  .timeline-company { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .timeline-cert-link { font-size: 0.7rem; color: var(--accent2); text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-top: 0.5rem; }
+  .timeline-cert-link:hover { text-decoration: underline; }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; gap: 1.5rem; }
+  .edu-card { display: grid; grid-template-columns: 120px 1fr; gap: 1.5rem; background: var(--card); border: 1px solid var(--border); padding: 1.75rem; border-radius: 4px; }
+  .edu-card:hover { border-color: var(--accent); }
+  .edu-year { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--border); line-height: 1.2; }
+  .edu-degree { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 0.25rem; }
+  .edu-school { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .edu-score { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: var(--accent); background: rgba(0,229,195,0.08); padding: 0.2rem 0.6rem; border-radius: 2px; width: fit-content; }
+
+  /* CERTIFICATIONS */
+  .cert-subgrid-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin: 2rem 0 1rem 0; display: flex; align-items: center; gap: 0.5rem; }
+  .cert-subgrid-title::before { content: '■'; color: var(--accent2); font-size: 0.6rem; }
+  .cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .cert-card { background: var(--card); border: 1px solid var(--border); padding: 1.25rem; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s; text-decoration: none; }
+  .cert-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+  .cert-name { font-size: 0.8rem; color: var(--text); font-weight: 500; margin-bottom: 0.5rem; }
+  .cert-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.62rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+  .cert-arrow { color: var(--accent2); font-size: 0.8rem; }
+
+  /* RECOGNITION / ACHIEVEMENTS */
+  .achievements-list { display: flex; flex-direction: column; gap: 1rem; }
+  .achievement-item { display: flex; align-items: flex-start; gap: 1.25rem; background: var(--card); border: 1px solid var(--border); padding: 1.25rem 1.5rem; border-radius: 4px; transition: all 0.2s; }
+  .achievement-item:hover { border-color: var(--accent3); }
+  .achievement-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .achievement-text { font-size: 0.82rem; color: var(--text); line-height: 1.6; }
+  .achievement-text strong { color: var(--accent3); }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .contact-intro { font-size: 0.9rem; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+  .contact-meta-box { margin-top: 1.5rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; font-size: 0.75rem; color: var(--muted); display: flex; flex-direction: column; gap: 0.5rem; }
+  .contact-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .contact-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem; background: var(--card); border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--text); font-size: 0.75rem; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-link-icon { font-size: 1rem; width: 20px; text-align: center; color: var(--accent); }
+
+  /* MARQUEE */
+  .marquee-wrapper { position: relative; z-index: 1; overflow: hidden; background: var(--accent); padding: 0.6rem 0; margin-top: 2rem; }
+  .marquee-track { display: flex; gap: 3rem; animation: marquee 25s linear infinite; white-space: nowrap; width: max-content; }
+  .marquee-track span { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #000; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* FOOTER */
+  footer { position: relative; z-index: 1; border-top: 1px solid var(--border); text-align: center; padding: 2.5rem; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; }
+
+  @media (max-width: 992px) {
+    .hero { grid-template-columns: 1fr; text-align: center; gap: 2rem; padding-top: 6rem; }
+    .hero-content { align-items: center; }
+    .hero-tag { justify-content: center; }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-badges { justify-content: center; }
+    .hero-cta { justify-content: center; }
+    .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-links { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .stat-bar-inner { grid-template-columns: repeat(2, 1fr); }
+    .edu-card { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-logo">MS_</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#certifications">Credentials</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeBtn" title="Toggle Appearance" aria-label="Toggle Appearance">
+      <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="about">
+  <div class="hero-content">
+    <div class="hero-tag">ECE Undergraduate · RTL Designer · Full Stack Developer</div>
+    <h1>Madanala<br><em>Sindhuja</em></h1>
+    <p class="hero-sub">
+      Building hardware architectures and modern web applications at the intersection of digital logic design, embedded platforms, and complete full-stack execution frameworks .
+    </p>
+    <div class="hero-badges">
+      <span class="badge">Verilog / VHDL</span>
+      <span class="badge">SystemVerilog</span>
+      <span class="badge">Python / C</span>
+      <span class="badge">PCB Design</span>
+      <span class="badge">Xilinx Vivado</span>
+      <span class="badge">Full Stack Web</span>
+    </div>
+    <div class="hero-cta">
+      <a href="mailto:sindhumadanala59@gmail.com" class="btn-primary">✉ Reach Out</a>
+      <a href="https://www.linkedin.com/in/sindhu-madanala-93a9b92b6" target="_blank" class="btn-outline">↗ LinkedIn</a>
+      <a href="https://github.com/Sindhumadanala" target="_blank" class="btn-outline">⌨ GitHub</a>
+    </div>
+  </div>
+  <div class="hero-image-wrapper">
+    <div class="profile-frame">
+      <!-- Your updated image source points directly to image.png now -->
+      <img src="image.png" alt="Madanala Sindhuja" class="profile-img" onerror="this.style.opacity='0.15';">
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE RUNNING TRACK -->
+<div class="marquee-wrapper">
+  <div class="marquee-track">
+    <span>VLSI Design</span><span>·</span>
+    <span>RTL Engineering</span><span>·</span>
+    <span>Embedded Systems</span><span>·</span>
+    <span>Python Automation</span><span>·</span>
+    <span>Verilog Design</span><span>·</span>
+    <span>PCB Layout Architecture</span><span>·</span>
+    <span>Full Stack Web Dev</span><span>·</span>
+    <span>DSA Problem Solving</span><span>·</span>
+  </div>
+</div>
+
+<!-- DATA METRICS COUNTERS -->
+<div class="stat-bar">
+  <div class="stat-bar-inner">
+    <div class="stat-item">
+      <div class="stat-num">9.13</div>
+      <div class="stat-label">Engineering CGPA</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Completed Internships</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">NPTEL Elites</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Competition Awards</div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-tag">01 — Core Engineering Matrix</div>
+  <h2>Skills &<br>Toolchains</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-title">Hardware Description</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Verilog</span>
+        <span class="skill-tag">VHDL</span>
+        <span class="skill-tag">System Verilog</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-title">Programming Ecosystem</div>
+      <div class="skill-tags">
+        <span class="skill-tag">C</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Data Structures (DSA)</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-title">Core Engineering Fields</div>
+      <div class="skill-tags">
+        <span class="skill-tag">VLSI Design</span>
+        <span class="skill-tag">Digital Electronics</span>
+        <span class="skill-tag">PCB Design</span>
+        <span class="skill-tag">Antenna Design</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-title">EDA, Simulators & IDEs</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Xilinx Vivado</span>
+        <span class="skill-tag">CST Studio</span>
+        <span class="skill-tag">KiCad</span>
+        <span class="skill-tag">Arduino IDE</span>
+        <span class="skill-tag">Proteus</span>
+        <span class="skill-tag">Keil</span>
+        <span class="skill-tag">MATLAB</span>
+        <span class="skill-tag">VS Code</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-title">Web Systems</div>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML</span>
+        <span class="skill-tag">CSS</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Frontend Design</span>
+        <span class="skill-tag">Full Stack Frameworks</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACADEMIC PROJECTS -->
+<section id="projects">
+  <div class="section-tag">02 — Engineering Repositories</div>
+  <h2>Academic & Technical<br>Projects</h2>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-num">01</div>
+        <div class="project-title">Smart Safety Pendant System</div>
+        <p class="project-desc">Emergency safety wearable implementation integrating real-time GPS coordinates and GSM SIM800L configuration.</p>
+      </div>
+      <div class="project-footer">
+        <div class="project-links-row">
+          <a href="https://github.com/Sindhumadanala/Smart-safety-pendent-system.git" target="_blank" class="p-link">↗ GitHub REPO</a>
+          <a href="https://drive.google.com/file/d/1Lnopj4iX5MGImDHxRTGyCWtmL-VYqj-I/view?usp=drive_link" target="_blank" class="p-link">🎬 Call Demo</a>
+          <a href="https://drive.google.com/file/d/1LlgiIhdu073rtIJMmfr5cJyB5eHZR7wX/view?usp=drive_link" target="_blank" class="p-link">💬 Msg Demo</a>
+        </div>
+        <span class="project-status" style="color:var(--muted);">✓ Built & Validated</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-num">02</div>
+        <div class="project-title">VLSI RTL Design Suite</div>
+        <p class="project-desc">Designed and evaluated an Arithmetic Logic Unit (ALU), RAM block, Pipeline Processor, and Digital Filter setups in Verilog.</p>
+      </div>
+      <div class="project-footer">
+        <div class="project-links-row">
+          <a href="https://github.com/Sindhumadanala" target="_blank" class="p-link">↗ Hardware Repositories</a>
+        </div>
+        <span class="project-status" style="color:var(--muted);">✓ Compiled & Simulated</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-num">03</div>
+        <div class="project-title">Neuro SafeDrive</div>
+        <p class="project-desc">Driver drowsiness prevention system utilizing targeted sensory data and automated cascading alerts.</p>
+      </div>
+      <div class="project-footer">
+        <span class="project-status" style="color:var(--accent);">
+          <span class="status-dot"></span> Active R&D Phase
+        </span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-num">04</div>
+        <div class="project-title">Currency Converter App</div>
+        <p class="project-desc">Dynamic web application parsing live exchange parameters utilizing standardized API lookups.</p>
+      </div>
+      <div class="project-footer">
+        <div class="project-links-row">
+          <a href="https://github.com/Sindhumadanala/Currency-Converter-.git" target="_blank" class="p-link">↗ GitHub REPO</a>
+          <a href="https://sindhumadanala.github.io/Currency-Converter-/" target="_blank" class="p-link">⚡ DEMO LINK</a>
+        </div>
+        <span class="project-status" style="color:var(--muted);">✓ Completed</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-num">05</div>
+        <div class="project-title">Personal Finance Tracker</div>
+        <p class="project-desc">Granular logging terminal utility application designed to evaluate expense logs and distribution profiles.</p>
+      </div>
+      <div class="project-footer">
+        <div class="project-links-row">
+          <a href="https://github.com/Sindhumadanala/Finance-Tracker.git" target="_blank" class="p-link">↗ GITHUB REPO</a>
+          <a href="https://sindhumadanala.github.io/Finance-Tracker/" target="_blank" class="p-link">⚡ DEMO LINNK</a>
+        </div>
+        <span class="project-status" style="color:var(--muted);">✓ Completed</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-top">
+        <div class="project-num">06</div>
+        <div class="project-title">Weather Forecast Live App </div>
+        <p class="project-desc">Real-time geographical environmental tracker querying open structural atmospheric endpoints.</p>
+      </div>
+      <div class="project-footer">
+        <div class="project-links-row">
+          <a href="https://github.com/Sindhumadanala/Weather-Forecast-live-App.git" target="_blank" class="p-link">↗ GITHUB REPO</a>
+          <a href="https://sindhumadanala.github.io/Weather-Forecast-live-App/" target="_blank" class="p-link">⚡ DEMO LINK</a>
+        </div>
+        <span class="project-status" style="color:var(--muted);">✓ Completed</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERNSHIP TIMELINE -->
+<section id="experience">
+  <div class="section-tag">03 — Industrial Track</div>
+  <h2>Internship<br>History</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role"> HPCL Industrial Engineering Intern</div>
+        <span class="timeline-date">04/05/2026 – 13/06/2026</span>
+      </div>
+      <div class="timeline-company">HPCL Vishakha Refinery · Visakhapatnam </div>
+      <p class="timeline-desc">Industrial process training centered directly around refinery core Instrumentation networks and maintenance architecture .</p>
+      <a href="https://drive.google.com/file/d/1CZdCYRtqPWdJAm_r12dExFIfJd_mO-ZK/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role">Frontend Web Development Intern </div>
+        <span class="timeline-date">17/05/2026 – 28/06/2026 </span>
+      </div>
+      <div class="timeline-company">CODTECH IT Solutions </div>
+      <p class="timeline-desc">Constructed structural, high-fidelity responsive web applications using JavaScript, CSS, and HTML .</p>
+      <a href="https://drive.google.com/file/d/1Jd1-3shS9oBXDBDYHHqPV0RW4M2RboFX/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role">VLSI Design Intern </div>
+        <span class="timeline-date">30/05/2025 – 30/06/2025 </span>
+      </div>
+      <div class="timeline-company">CODTECH IT Solutions · Virtual </div>
+      <p class="timeline-desc">Synthesized RTL components using Verilog HDL. Worked on core digital circuit frameworks .</p>
+      <a href="https://drive.google.com/file/d/1_uyzn2Xb1oj9qvoibA3H7xogkv4vWPom/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role">Java Full Stack Developer Intern </div>
+        <span class="timeline-date">Jul 2025 – Sep 2025 </span>
+      </div>
+      <div class="timeline-company">EduSkills Academy · Virtual </div>
+      <p class="timeline-desc">Modeled relational application storage, robust frameworks, and backend integration layers .</p>
+      <a href="https://drive.google.com/file/d/18pyzHu7hR4qxRrCb1LvHWx5EqFnueDcv/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role">Web Full Stack Developer Intern </div>
+        <span class="timeline-date">Apr 2025 – Jun 2025 </span>
+      </div>
+      <div class="timeline-company">EduSkills Academy · Virtual </div>
+      <p class="timeline-desc">Engineered client-server interactions alongside streamlined interactive web layouts .</p>
+      <a href="https://drive.google.com/file/d/1T-QziFI_YHoSbWTtptYHByilKOx_0UbO/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role">Embedded Systems Developer Intern </div>
+        <span class="timeline-date">Jan 2025 – Mar 2025 </span>
+      </div>
+      <div class="timeline-company">EduSkills Academy · Virtual </div>
+      <p class="timeline-desc">Programmed peripheral systems firmware configurations and modular hardware register layers .</p>
+      <a href="https://drive.google.com/file/d/1x2rFokAfVcUbMpOWvLNJ5tAuQ8xtwfly/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-header">
+        <div class="timeline-role">Python Full Stack Developer Intern </div>
+        <span class="timeline-date">Oct 2024 – Dec 2024 </span>
+      </div>
+      <div class="timeline-company">EduSkills Academy · Virtual </div>
+      <p class="timeline-desc">Assembled robust backend logic systems and operational virtual pipeline assets .</p>
+      <a href="https://drive.google.com/file/d/1RCobUU6nZEb1K9WS_PSTDb0HzhWvdKiy/view?usp=sharing" target="_blank" class="timeline-cert-link">📄 Verify Certificate </a>
+    </div>
+  </div>
+</section>
+
+<!-- ACADEMIC BACKGROUND -->
+<section id="education">
+  <div class="section-tag">04 — Education Pathway</div>
+  <h2>Academic<br>Background</h2>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-year">2023<br>– Present</div>
+      <div>
+        <div class="edu-degree">B.Tech — Electronics & Communication Engineering </div>
+        <div class="edu-school">Vignan's Institute of Information Technology (A), Duvvada </div>
+        <span class="edu-score">⭐ Cumulative CGPA: 9.13 </span>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">2021<br>– 2023</div>
+      <div>
+        <div class="edu-degree">Intermediate Board (Class XII) — MPC </div>
+        <div class="edu-school">Sri Gurukula, Palasa </div>
+        <span class="edu-score">⭐ Aggregate Marks: 97.2% </span>
+      </div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">2020<br>– 2021</div>
+      <div>
+        <div class="edu-degree">Matriculation (Class X) </div>
+        <div class="edu-school">Sri Gurukula Vidyalayam, Palasa </div>
+        <span class="edu-score">⭐ Perfect CGPA: 10 </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS & CREDENTIALS -->
+<section id="certifications">
+  <div class="section-tag">05 — Earned Credentials</div>
+  <h2>Professional<br>Certifications</h2>
+
+  <div class="cert-subgrid-title">Advanced NPTEL Certifications </div>
+  <div class="cert-grid">
+    <a href="https://nptel.ac.in/noc/E_Certificate/NPTEL24EE147S95290072604310810" target="_blank" class="cert-card">
+      <div class="cert-name">Digital Circuits </div>
+      <div class="cert-meta"><span>Jul-Oct 2024 </span><span class="cert-arrow">Elite ↗</span></div>
+    </a>
+    <a href="https://nptel.ac.in/noc/E_Certificate/NPTEL25EE180S55080040509229058" target="_blank" class="cert-card">
+      <div class="cert-name">System Design Through Verilog </div>
+      <div class="cert-meta"><span>Jan-Mar 2026 </span><span class="cert-arrow">Elite ↗</span></div>
+    </a>
+    <a href="https://nptel.ac.in/noc/E_Certificate/NPTEL26CS79S37200056203189401" target="_blank" class="cert-card">
+      <div class="cert-name">Programming, DS & Algorithms (Python) </div>
+      <div class="cert-meta"><span>Jul-Sep 2025 </span><span class="cert-arrow">Elite ↗</span></div>
+    </a>
+    <a href="https://nptel.ac.in/noc/E_Certificate/NPTEL25EE87S116030001204543309" target="_blank" class="cert-card">
+      <div class="cert-name">Design of Power Electronic Converters </div>
+      <div class="cert-meta"><span>Feb-Apr 2025 </span><span class="cert-arrow">Verified ↗</span></div>
+    </a>
+  </div>
+
+  <div class="cert-subgrid-title">Cisco Networking Academy Credentials </div>
+  <div class="cert-grid">
+    <a href="https://drive.google.com/file/d/1_ha1zP5tPT31tsoItppA-vOqXS3_uHs-/view" target="_blank" class="cert-card">
+      <div class="cert-name">Python Essentials 1 </div>
+      <div class="cert-meta"><span>Mar 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1xHJhXoWNMyDJw-NFwzwwyxpGXrI-kKqh/view" target="_blank" class="cert-card">
+      <div class="cert-name">Python Essentials 2 </div>
+      <div class="cert-meta"><span>Apr 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1SSja7bR7l5JNM0KyDgaO7To6IDlpK1uj/view" target="_blank" class="cert-card">
+      <div class="cert-name">Introduction to Cybersecurity </div>
+      <div class="cert-meta"><span>Mar 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1e8BrSaibm2nTp_0MaGbImXue6JNC8Xsq/view" target="_blank" class="cert-card">
+      <div class="cert-name">Cybersecurity Essentials </div>
+      <div class="cert-meta"><span>Mar 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1y0z3UnXIqwghLHhFXz1cbv0tVZm_QoSQ/view" target="_blank" class="cert-card">
+      <div class="cert-name">CCNA: Introduction to Networks </div>
+      <div class="cert-meta"><span>Mar 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1Gx6WdZ_nTyyeIh4_q-c_OxjFGmD9xCJN/view" target="_blank" class="cert-card">
+      <div class="cert-name">CCNA: Switching, Routing & Wireless </div>
+      <div class="cert-meta"><span>Apr 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1mIAqXxvqWJiy4Kw2tcXBkoPB_uEG91Jz/view" target="_blank" class="cert-card">
+      <div class="cert-name">CCNA: Enterprise Networking & Automation </div>
+      <div class="cert-meta"><span>Apr 2025 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+  </div>
+
+  <div class="cert-subgrid-title">TCS iON Endorsements </div>
+  <div class="cert-grid">
+    <a href="https://drive.google.com/file/d/13wiVAiOX3VkLX-unYCobxXN_eX60q3Og/view?usp=drive_link" target="_blank" class="cert-card">
+      <div class="cert-name">Communication Skills </div>
+      <div class="cert-meta"><span>Mar 2026 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1LCF6XpJ155D4Ku9oAZN3s3Eo3hpfToqb/view?usp=sharing" target="_blank" class="cert-card">
+      <div class="cert-name">Presentation Skills </div>
+      <div class="cert-meta"><span>Mar 2026 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1tLNwJf25AQFjWT1MFwHtWY_rN2CRPh1y/view?usp=sharing" target="_blank" class="cert-card">
+      <div class="cert-name">TCS MasterCraft™ DataPlus </div>
+      <div class="cert-meta"><span>Mar 2026 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1n17NkWYIw5UO-PGRywXfAfd7uDPCmo2G/view?usp=sharing" target="_blank" class="cert-card">
+      <div class="cert-name">TCS MasterCraft™ TransformPlus </div>
+      <div class="cert-meta"><span>Mar 2026 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+    <a href="https://drive.google.com/file/d/1KL9vhwNHKeshjS7eQFTcQytOdDOZKENV/view?usp=sharing" target="_blank" class="cert-card">
+      <div class="cert-name">Yuva AI for All </div>
+      <div class="cert-meta"><span>Mar 2026 </span><span class="cert-arrow">Verify ↗</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- HONORS & ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-tag">06 — Recognition & Awards</div>
+  <h2>Engineering Achievements</h2>
+  <div class="achievements-list">
+    <div class="achievement-item">
+      <div class="achievement-icon">🥇</div>
+      <div class="achievement-text">
+        <strong>1st Position Award</strong> — Circutrix Technical Hardware Contest, Vista 2K25 (Campus Level Exhibition) .
+      </div>
+    </div>
+    <div class="achievement-item">
+      <div class="achievement-icon">🥈</div>
+      <div class="achievement-text">
+        <strong>2nd Position Award</strong> — Circutrix Technical Contest, Vista 2K24 (Campus Logic Challenge) .
+      </div>
+    </div>
+    <div class="achievement-item">
+      <div class="achievement-icon">🏅</div>
+      <div class="achievement-text">
+        <strong>Top 5 National Finalist</strong> — Elecxa'24 National Engineering Showcase, SRM Institute Chennai .
+      </div>
+    </div>
+    <div class="achievement-item">
+      <div class="achievement-icon">📊</div>
+      <div class="achievement-text">
+        <strong>Specialized Technical Training</strong> — Advanced Workshop Completion on Data Forecasting using Machine Learning Tools (<a href="https://drive.google.com/file/d/1VPq503xa7JBdu2m7BxQKmzICBxgDm0gB/view?usp=sharing" target="_blank" style="color:var(--accent3); text-decoration:none; font-weight:700;">Certificate Link </a>).
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER / CONTACT GRID -->
+<section id="contact">
+  <div class="section-tag">07 — Network Terminal</div>
+  <h2>Let's Work<br>Together</h2>
+  <div class="contact-grid">
+    <div>
+      <p class="contact-intro">
+        I am currently seeking technical engineering opportunities across VLSI front-end architecture design, embedded firmware environments, and software developer integration vectors .
+      </p>
+      <div class="contact-meta-box">
+        <strong>Permanent Address:</strong> 
+        <span>Natayyapalem, BHPV Post, Gajuwaka, Visakhapatnam, Andhra Pradesh, India </span>
+      </div>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:sindhumadanala59@gmail.com" class="contact-link">
+        <span class="contact-link-icon">✉</span>sindhumadanala59@gmail.com 
+      </a>
+      <a href="tel:6281660056" class="contact-link">
+        <span class="contact-link-icon">📞</span>+91 6281660056 
+      </a>
+      <a href="https://www.linkedin.com/in/sindhu-madanala-93a9b92b6" target="_blank" class="contact-link">
+        <span class="contact-link-icon">🔗</span>LinkedIn Profile 
+      </a>
+      <a href="https://github.com/Sindhumadanala" target="_blank" class="contact-link">
+        <span class="contact-link-icon">⌨</span>GitHub Forge 
+      </a>
+      <a href="https://www.codechef.com/users/sindhu_169" target="_blank" class="contact-link">
+        <span class="contact-link-icon">⚡</span>CodeChef Terminal 
+      </a>
+      <a href="https://leetcode.com/u/Sindhu_madanala/" target="_blank" class="contact-link">
+        <span class="contact-link-icon">🎯</span>LeetCode Hub 
+      </a>
+      <a href="https://www.hackerrank.com/profile/sindhumadanala59" target="_blank" class="contact-link">
+        <span class="contact-link-icon">🏆</span>HackerRank Profile 
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Madanala Sindhuja · Active Application Asset Dossier · Visakhapatnam, India </p>
+</footer>
+
+<script>
+  const themeBtn = document.getElementById('themeBtn');
+  const themeIcon = document.getElementById('themeIcon');
+  
+  themeBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    if (currentTheme === 'light') {
+      document.documentElement.removeAttribute('data-theme');
+      themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      themeIcon.innerHTML = `
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.22" x2="5.64" y2="17.78"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      `;
+    }
+  });
+</script>
+
+</body>
+</html>
